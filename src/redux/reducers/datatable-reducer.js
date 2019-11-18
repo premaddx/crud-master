@@ -66,16 +66,16 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             // return as per page number and search if any
             const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
-            const searchData = state.data.slice(startIndex, lastIndex);
-            let tableData = searchData;
+            let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
-                tableData = searchData.filter((obj) => {
+                tableData = state.data.filter((obj) => {
                     if (typeof obj[state.searchKey] === 'string') {
                         return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
                     } else {
                         return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
                     }
                 });
+                tableData = tableData.slice(startIndex, lastIndex);
             }
             state.tableData = tableData;
             state.totalPages = Math.ceil(state.data.length/ 10);
@@ -88,16 +88,16 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             // return as per page number and search if any
             const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
-            const searchData = state.data.slice(startIndex, lastIndex);
-            let tableData = searchData;
+            let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
-                tableData = searchData.filter((obj) => {
+                tableData = state.data.filter((obj) => {
                     if (typeof obj[state.searchKey] === 'string') {
                         return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
                     } else {
                         return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
                     }
                 });
+                tableData = tableData.slice(startIndex, lastIndex);
             }
             state.tableData = tableData;
             return { ...state };
@@ -109,16 +109,16 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             // return as per page number and search if any
             const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
-            const searchData = state.data.slice(startIndex, lastIndex);
-            let tableData = searchData;
+            let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
-                tableData = searchData.filter((obj) => {
+                tableData = state.data.filter((obj) => {
                     if (typeof obj[state.searchKey] === 'string') {
                         return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
                     } else {
                         return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
                     }
                 });
+                tableData = tableData.slice(startIndex, lastIndex);
             }
             state.totalPages = Math.ceil(state.data.length/ 10);
             state.tableData = tableData;
@@ -128,17 +128,18 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             const { key, text } = action.data;
             state.searchKey = key;
             state.searchText = text;
+            state.currentPage = 1;
             const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
-            const searchData = state.data.slice(startIndex, lastIndex);
             // apply filter
-            const tableData = searchData.filter((obj) => {
+            let tableData = state.data.filter((obj) => {
                 if (typeof obj[key] === 'string') {
                     return obj[key].trim().toUpperCase().includes(text.trim().toUpperCase());
                 } else {
                     return obj[key] === parseInt(text.trim(), 10);
                 }
             });
+            tableData = tableData.slice(startIndex, lastIndex);
             return { ...state, tableData };
         }
         case SORT: {
@@ -151,16 +152,16 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             state.currentPage = action.data.pageNo;
             const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
-            const searchData = state.data.slice(startIndex, lastIndex);
-            let tableData = searchData;
+            let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
-                tableData = searchData.filter((obj) => {
+                tableData = state.data.filter((obj) => {
                     if (typeof obj[state.searchKey] === 'string') {
                         return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
                     } else {
                         return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
                     }
                 });
+                tableData = tableData.slice(startIndex, lastIndex);
             }
             state.totalPages = Math.ceil(state.data.length/ 10);
             state.tableData = tableData;
