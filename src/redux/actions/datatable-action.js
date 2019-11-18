@@ -76,39 +76,15 @@ export function sortTable (data, key, order = 'ASC') {
 
 export function createEmployee (data = {}) {
     return async dispatch => {
-        // create a new id for user
-        const obj = {
-            'jobTitleName': 'Developer',
-            'firstName': 'Ab',
-            'lastName': 'Cd',
-            'preferredFullName': 'Ab Cd',
-            'employeeCode': 'E5',
-            'region': 'CA',
-            'dob': '01/10/1998',
-            'phoneNumber': '408-1111111',
-            'emailAddress': 'abcd@gmail.com'
-        };
-        dispatch(createAction(obj)); // pass incoming data
+        dispatch(createAction(data));
     }
 }
 
 
 
-export function updateEmployee (id, data = {}) {
+export function updateEmployee (data = {}) {
     return async dispatch => {
-        // create a new id for user
-        const updatedObj = {
-            'jobTitleName': 'Developer',
-            'firstName': 'Updated',
-            'lastName': 'Employee',
-            'preferredFullName': 'Updated Employee',
-            'employeeCode': 'E5',
-            'region': 'CA',
-            'dob': '01/10/1998',
-            'phoneNumber': '408-1111111',
-            'emailAddress': 'abcd@gmail.com'
-        };
-        dispatch(updateAction({ updatedObj, id })); // pass incoming data
+        dispatch(updateAction({ updatedObj: data, id: data.id }));
     }
 }
 
