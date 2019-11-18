@@ -44,22 +44,39 @@ const INITIAL_STATE = {
             phoneNumber: "408-2222222",
             emailAddress: "tomhanks@gmail.com"
         }
-    ]
+    ],
+    maxId: 3,
 };
 
 export default function dataTableReducer (state = INITIAL_STATE, action) {
     switch (action.type) {
         // return the state accordingly
-        case CREATE:
+        case CREATE: {
+            const resultantState = { ...state };
+            resultantState.maxId++;
+            action.data.id = resultantState.maxId;
+            resultantState.data.push(action.data);
+            return resultantState;
+        }
+        case UPDATE: {
+            const newData = state.data;
+            const index = state.data.findIndex(obj => obj.id === action.data.id);
+            action.data.updatedObj.id = action.data.id;
+            newData[index] = action.data.updatedObj;
             return { ...state };
-        case UPDATE:
+        }
+        case DELETE: {
+            const index = state.data.findIndex(obj => obj.id === action.data.id);
+            state.data.splice(index, 1);
+            state.maxId--;
             return { ...state };
-        case DELETE:
+        }
+        case SORT: {
+            return { ...action.data };
+        }
+        case SEARCH: {
             return { ...state };
-        case SORT:
-            return { ...state };
-        case SEARCH:
-            return { ...state };
+        }
         default:
             return state;
     }

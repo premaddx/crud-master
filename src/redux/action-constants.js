@@ -1,6 +1,6 @@
-export const CREATE = 'READ';
+export const CREATE = 'CREATE';
 
-export const UPDATE = 'READ';
+export const UPDATE = 'UPDATE';
 
 export const DELETE = 'DELETE';
 
