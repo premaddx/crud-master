@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { sortTable, createEmployee, updateEmployee, deleteEmployee, search } from '../../redux/actions/datatable-action';
+import { sortTable, createEmployee, updateEmployee, deleteEmployee, search, pagination } from '../../redux/actions/datatable-action';
 
 import './datatable.css';
 
@@ -25,7 +25,7 @@ class DataTable extends React.Component {
     }
 
     handleSortTable = (keyName) => () => {
-         this.props.sortTable(this.props.tableData, this.state.columns[keyName], 'ASC');
+        this.props.sortTable(this.props.tableData, this.state.columns[keyName], 'ASC');
     }
 
     createEmployee = () => () => this.props.createEmployee();
@@ -35,7 +35,7 @@ class DataTable extends React.Component {
     deleteEmployee = () => () => this.props.deleteEmployee(this.props.maxId);
 
     searchTable = () => () => {
-        if(this.state.searchText) {
+        if (this.state.searchText) {
             this.props.search(this.state.searchKey, this.state.searchText);
         }
     };
@@ -50,6 +50,18 @@ class DataTable extends React.Component {
         this.setState({
             searchKey: e.target.value,
         });
+    }
+
+    handlePaginationChange = (e) => {
+        this.props.pagination(e.target.value);
+    };
+
+    renderPaginationDropdown = () => {
+        const arr = [];
+        for (let i = 1; i <= this.props.totalPages; i++) arr.push(i);
+        return <select onChange={this.handlePaginationChange}>
+            {arr.map(val => <option key={val} value={val}>{val}</option>)}
+        </select>
     }
 
     render () {
@@ -103,6 +115,7 @@ class DataTable extends React.Component {
                         <button onClick={this.updateEmployee(this.props.maxId)}>Edit Employee</button>
                         <button onClick={this.deleteEmployee(this.props.maxId)}>Delete Employee</button>
                     </div>
+                    <div>{this.renderPaginationDropdown()}</div>
                 </div>
             </div>
         );
@@ -113,10 +126,12 @@ const mapStateToProps = state => {
     const { dataTableReducer: {
         maxId,
         tableData,
+        totalPages,
     } } = state;
     return {
         maxId,
         tableData,
+        totalPages,
     };
 }
 
@@ -126,6 +141,7 @@ export default connect(
     {
         sortTable,
         search,
+        pagination,
         createEmployee,
         updateEmployee,
         deleteEmployee,

@@ -4,6 +4,7 @@ import {
     DELETE,
     SORT,
     SEARCH,
+    PAGINATION,
 } from '../action-constants';
 
 const INITIAL_STATE = {
@@ -46,11 +47,14 @@ const INITIAL_STATE = {
         }
     ],
     tableData: [],
-    page: 1,
+    currentPage: 1,
+    totalPages: 1,
     searchKey: 'id',
     searchText: '',
     maxId: 3,
 };
+
+// after each operation set the totalPages
 
 export default function dataTableReducer (state = INITIAL_STATE, action) {
     switch (action.type) {
@@ -60,7 +64,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             action.data.id = state.maxId;
             state.data.push(action.data);
             // return as per page number and search if any
-            const lastIndex = state.page * 10;
+            const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
             const searchData = state.data.slice(startIndex, lastIndex);
             let tableData = searchData;
@@ -74,6 +78,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
                 });
             }
             state.tableData = tableData;
+            state.totalPages = Math.ceil(state.data.length/ 10);
             return { ...state };
         }
         case UPDATE: {
@@ -81,7 +86,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             action.data.updatedObj.id = action.data.id;
             state.data[index] = action.data.updatedObj;
             // return as per page number and search if any
-            const lastIndex = state.page * 10;
+            const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
             const searchData = state.data.slice(startIndex, lastIndex);
             let tableData = searchData;
@@ -102,7 +107,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             state.data.splice(index, 1);
             state.maxId--;
             // return as per page number and search if any
-            const lastIndex = state.page * 10;
+            const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
             const searchData = state.data.slice(startIndex, lastIndex);
             let tableData = searchData;
@@ -115,6 +120,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
                     }
                 });
             }
+            state.totalPages = Math.ceil(state.data.length/ 10);
             state.tableData = tableData;
             return { ...state };
         }
@@ -122,7 +128,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             const { key, text } = action.data;
             state.searchKey = key;
             state.searchText = text;
-            const lastIndex = state.page * 10;
+            const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
             const searchData = state.data.slice(startIndex, lastIndex);
             // apply filter
@@ -140,9 +146,29 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             const tableData = [...action.data];
             return { ...state, tableData };
         }
+        case PAGINATION: {
+            // set the
+            state.currentPage = action.data.pageNo;
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            const searchData = state.data.slice(startIndex, lastIndex);
+            let tableData = searchData;
+            if (state.searchKey && state.searchText) {
+                tableData = searchData.filter((obj) => {
+                    if (typeof obj[state.searchKey] === 'string') {
+                        return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
+                    } else {
+                        return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
+                    }
+                });
+            }
+            state.totalPages = Math.ceil(state.data.length/ 10);
+            state.tableData = tableData;
+            return { ...state };
+        }
         default:
             // return the first 10 values from data
-            const lastIndex = state.page * 10;
+            const lastIndex = state.currentPage * 10;
             const startIndex = lastIndex - 10;
             const tableData = state.data.slice(startIndex, lastIndex);
             state.tableData = tableData;
