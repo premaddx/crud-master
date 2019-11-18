@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { sortTable, createEmployee, updateEmployee, deleteEmployee } from '../../redux/actions/datatable-action';
+import { sortTable, createEmployee, updateEmployee, deleteEmployee, search } from '../../redux/actions/datatable-action';
 
 import './datatable.css';
 
@@ -8,8 +8,7 @@ class DataTable extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: this.props.dataTableReducer.data,
-            headers: {
+            columns: {
                 'ID': 'id',
                 'Full Name': 'preferredFullName',
                 'Employee Code': 'employeeCode',
@@ -19,43 +18,91 @@ class DataTable extends React.Component {
                 'Region': 'region',
                 'DOB': 'dob',
                 'Action': null,
-            }
+            },
+            searchKey: 'id',
+            searchText: '',
         };
+    }
+
+    handleSortTable = (keyName) => () => {
+         this.props.sortTable(this.props.tableData, this.state.columns[keyName], 'ASC');
+    }
+
+    createEmployee = () => () => this.props.createEmployee();
+
+    updateEmployee = () => () => this.props.updateEmployee(this.props.maxId);
+
+    deleteEmployee = () => () => this.props.deleteEmployee(this.props.maxId);
+
+    searchTable = () => () => {
+        if(this.state.searchText) {
+            this.props.search(this.state.searchKey, this.state.searchText);
+        }
+    };
+
+    handleTextFieldChange = (e) => {
+        this.setState({
+            searchText: e.target.value,
+        });
+    }
+
+    handleSelectChange = (e) => {
+        this.setState({
+            searchKey: e.target.value,
+        });
     }
 
     render () {
         return (
             <div>
-                <table className='container'>
-                    <thead>
-                        <tr>
-                            {Object.keys(this.state.headers).map(keyName => {
-                                return <th scope='col' key={this.state.headers[keyName]}>
-                                    <a onClick={() => this.props.sortTable(this.state.data, this.state.headers[keyName], 'ASC')} className="sort-by">{keyName}</a>
-                                </th>
-                            })}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.data.map(obj => {
-                            return <tr key={obj.id}>
-                                <td>{`EM${obj.id}`}</td>
-                                <td>{obj.preferredFullName}</td>
-                                <td>{obj.employeeCode}</td>
-                                <td>{obj.jobTitleName}</td>
-                                <td>{obj.phoneNumber}</td>
-                                <td>{obj.emailAddress}</td>
-                                <td>{obj.region}</td>
-                                <td>{obj.dob}</td>
-                                <td><input type='button' value='...' /></td>
-                            </tr>
-                        })}
-                    </tbody>
-                </table>
                 <div>
-                    <button onClick={() => this.props.createEmployee()}>Add Employee</button>
-                    <button onClick={() => this.props.updateEmployee(this.props.dataTableReducer.maxId)}>Edit Employee</button>
-                    <button onClick={() => this.props.deleteEmployee(this.props.dataTableReducer.maxId)}>Delete Employee</button>
+                    <h3>Employees</h3>
+                </div>
+                <div>
+                    <select onChange={this.handleSelectChange}>
+                        {Object.keys(this.state.columns).map(keyName => {
+                            return <option value={this.state.columns[keyName]} key={this.state.columns[keyName]}>{keyName}</option>
+                        })}
+                    </select>
+                    {/**
+                     * make curry functions for each event handlers
+                     * pick values from document.getElementById for searching
+                     */}
+                    <input type='text' name='search' placeholder='Search' onChange={this.handleTextFieldChange}></input>
+                    <button type="button" onClick={this.searchTable()}>Click Me!</button>
+                </div>
+                <div>
+                    <table className='container'>
+                        <thead>
+                            <tr>
+                                {Object.keys(this.state.columns).map(keyName => {
+                                    return <th scope='col' key={this.state.columns[keyName]}>
+                                        <a onClick={this.handleSortTable(keyName)} className="sort-by">{keyName}</a>
+                                    </th>
+                                })}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.props.tableData.map(obj => {
+                                return <tr key={obj.id}>
+                                    <td>{`EM${obj.id}`}</td>
+                                    <td>{obj.preferredFullName}</td>
+                                    <td>{obj.employeeCode}</td>
+                                    <td>{obj.jobTitleName}</td>
+                                    <td>{obj.phoneNumber}</td>
+                                    <td>{obj.emailAddress}</td>
+                                    <td>{obj.region}</td>
+                                    <td>{obj.dob}</td>
+                                    <td><input type='button' value='...' /></td>
+                                </tr>
+                            })}
+                        </tbody>
+                    </table>
+                    <div>
+                        <button onClick={this.createEmployee()}>Add Employee</button>
+                        <button onClick={this.updateEmployee(this.props.maxId)}>Edit Employee</button>
+                        <button onClick={this.deleteEmployee(this.props.maxId)}>Delete Employee</button>
+                    </div>
                 </div>
             </div>
         );
@@ -63,9 +110,13 @@ class DataTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const { dataTableReducer } = state;
+    const { dataTableReducer: {
+        maxId,
+        tableData,
+    } } = state;
     return {
-        dataTableReducer,
+        maxId,
+        tableData,
     };
 }
 
@@ -74,6 +125,7 @@ export default connect(
     mapStateToProps,
     {
         sortTable,
+        search,
         createEmployee,
         updateEmployee,
         deleteEmployee,

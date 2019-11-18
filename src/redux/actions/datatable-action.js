@@ -42,6 +42,13 @@ export function searchAction (data) {
 }
 
 
+export function search (key, text) {
+    return async dispatch => {
+        dispatch(searchAction({ key, text }));
+    }
+}
+
+
 export function sortTable (data, key, order = 'ASC') {
     return async dispatch => {
         // sort the data as per key and dispatch action
