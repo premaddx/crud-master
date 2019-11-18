@@ -1,2 +1,2 @@
-# crud-master
-Comprehensive Data Table with basic CRUD operations.
+# CRUD-MASTER
+> Comprehensive Data Table with basic CRUD operations.
