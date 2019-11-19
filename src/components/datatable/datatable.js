@@ -10,14 +10,9 @@ import {
 } from "../../redux/actions/datatable-action";
 import Modal from "../Modal";
 import Input from "../Input";
-
+import { MODAL, COLUMNS, Create, Update, View } from "./constants";
 import "./datatable.css";
 
-const MODAL = {
-  VIEW: "View",
-  UPDATE: "Update",
-  CREATE: "Create"
-};
 class DataTable extends React.Component {
   constructor(props) {
     super(props);
@@ -27,47 +22,27 @@ class DataTable extends React.Component {
       isOpen: false,
       modalView: MODAL.VIEW,
       active: null,
-      sortType:"ASC",
-      sortColumn:"id",
-      columns: {
-        //shift this to constants
-        ID: "id",
-        "Full Name": "preferredFullName",
-        "Employee Code": "employeeCode",
-        "Job Title": "jobTitleName",
-        "Phone Number": "phoneNumber",
-        "Email ID": "emailAddress",
-        Region: "region",
-        DOB: "dob",
-        Action: null
-      }
+      sortType: "ASC",
+      sortColumn: "id"
     };
   }
 
   handleSortTable = keyName => () => {
     let sortType;
-    if(keyName === this.state.sortColumn){
+    if (keyName === this.state.sortColumn) {
       sortType = this.toggleSortType();
-      this.props.sortTable(
-        this.props.tableData,
-        this.state.columns[keyName],
-        sortType
-      );
-    }else{
+      this.props.sortTable(this.props.tableData, COLUMNS[keyName], sortType);
+    } else {
       sortType = "ASC";
-      this.props.sortTable(
-        this.props.tableData,
-        this.state.columns[keyName],
-        sortType
-      );
+      this.props.sortTable(this.props.tableData, COLUMNS[keyName], sortType);
     }
-    this.setState({sortType,sortColumn: keyName});
+    this.setState({ sortType, sortColumn: keyName });
   };
 
-  toggleSortType = () =>{
-    if(this.state.sortType === "ASC") return "DSC";
+  toggleSortType = () => {
+    if (this.state.sortType === "ASC") return "DSC";
     return "ASC";
-  }
+  };
 
   createEmployee = () => this.props.createEmployee();
 
@@ -140,187 +115,26 @@ class DataTable extends React.Component {
     if (!a) return [];
     switch (modalView) {
       case MODAL.VIEW: {
-        return (
-          <Fragment>
-            <div className="header-section">
-              <div className="small-text">EM-{a.employeeCode}</div>
-              <div className="modal-header">{a.preferredFullName}</div>
-            </div>
-            <ul className="view-list">
-              <li>
-                <div className="label">Name</div>
-                <div className="value">{a.preferredFullName}</div>
-              </li>
-              <li>
-                <div className="label">Employee Code</div>
-                <div className="value">{a.employeeCode}</div>
-              </li>
-              <li>
-                <div className="label">Job Title</div>
-                <div className="value">{a.jobTitleName}</div>
-              </li>
-              <li>
-                <div className="label">Phone Number</div>
-                <div className="value">{a.phoneNumber}</div>
-              </li>
-              <li>
-                <div className="label">Email ID</div>
-                <div className="value">{a.emailAddress}</div>
-              </li>
-              <li>
-                <div className="label">Region</div>
-                <div className="value">{a.region}</div>
-              </li>
-              <li>
-                <div className="label">DOB</div>
-                <div className="value">{a.dob}</div>
-              </li>
-            </ul>
-          </Fragment>
-        );
+        return <View a={a} />;
       }
       case MODAL.UPDATE: {
         return (
-          <Fragment>
-            <div className="header-section">
-              <div className="modal-header">Update Employee</div>
-            </div>
-            <form onSubmit={this.updateRecord} className="view-list">
-              <div className="flex">
-                <Input
-                  label="ID"
-                  value={a.employeeCode}
-                  name="employeeCode"
-                  onChange={this.onActiveChange}
-                  pre={<div className="input-pre">EM</div>}
-                />
-              </div>
-              <div className="flex">
-                <Input
-                  label="FirstName"
-                  value={a.firstName}
-                  name="firstName"
-                  onChange={this.onActiveChange}
-                />
-                <Input
-                  label="LastName"
-                  value={a.lastName}
-                  name="lastName"
-                  onChange={this.onActiveChange}
-                />
-              </div>
-              <Input
-                label="Job Title"
-                value={a.jobTitleName}
-                name="jobTitleName"
-                onChange={this.onActiveChange}
-              />
-              <Input
-                label="Email"
-                value={a.emailAddress}
-                name="emailAddress"
-                onChange={this.onActiveChange}
-              />
-              <Input
-                label="Phone Number"
-                value={a.phoneNumber}
-                name="phoneNumber"
-                onChange={this.onActiveChange}
-              />
-              <div className="flex">
-                <Input
-                  label="Region"
-                  value={a.region}
-                  name="region"
-                  onChange={this.onActiveChange}
-                />
-                <Input
-                  label="DOB"
-                  value={a.dob}
-                  name="dob"
-                  onChange={this.onActiveChange}
-                />
-              </div>
-              <button type="submit" className="primary">
-                Update
-              </button>
-              <button type="text" onClick={this.closeModal}>
-                Cancel
-              </button>
-            </form>
-          </Fragment>
+          <Update
+            a={a}
+            updateRecord={this.updateRecord}
+            closeModal={this.closeModal}
+            onActiveChange={this.onActiveChange}
+          />
         );
       }
       case MODAL.CREATE: {
         return (
-          <Fragment>
-            <div className="header-section">
-              <div className="modal-header">Create Employee</div>
-            </div>
-            <form onSubmit={this.createRecord} className="view-list">
-              <div className="flex">
-                <Input
-                  label="ID"
-                  value={a.employeeCode}
-                  name="employeeCode"
-                  onChange={this.onActiveChange}
-                  pre={<div className="input-pre">EM</div>}
-                />
-              </div>
-              <div className="flex">
-                <Input
-                  label="FirstName"
-                  value={a.firstName}
-                  name="firstName"
-                  onChange={this.onActiveChange}
-                />
-                <Input
-                  label="LastName"
-                  value={a.lastName}
-                  name="lastName"
-                  onChange={this.onActiveChange}
-                />
-              </div>
-              <Input
-                label="Job Title"
-                value={a.jobTitleName}
-                name="jobTitleName"
-                onChange={this.onActiveChange}
-              />
-              <Input
-                label="Email"
-                value={a.emailAddress}
-                name="emailAddress"
-                onChange={this.onActiveChange}
-              />
-              <Input
-                label="Phone Number"
-                value={a.phoneNumber}
-                name="phoneNumber"
-                onChange={this.onActiveChange}
-              />
-              <div className="flex">
-                <Input
-                  label="Region"
-                  value={a.region}
-                  name="region"
-                  onChange={this.onActiveChange}
-                />
-                <Input
-                  label="DOB"
-                  value={a.dob}
-                  name="dob"
-                  onChange={this.onActiveChange}
-                />
-              </div>
-              <button type="submit" className="primary">
-                Create
-              </button>
-              <button type="text" onClick={this.closeModal}>
-                Cancel
-              </button>
-            </form>
-          </Fragment>
+          <Create
+            a={a}
+            createRecord={this.createRecord}
+            closeModal={this.closeModal}
+            onActiveChange={this.onActiveChange}
+          />
         );
       }
       default:
@@ -374,12 +188,9 @@ class DataTable extends React.Component {
         </div>
         <div>
           <select onChange={this.handleSelectChange}>
-            {Object.keys(this.state.columns).map(keyName => {
+            {Object.keys(COLUMNS).map(keyName => {
               return (
-                <option
-                  value={this.state.columns[keyName]}
-                  key={this.state.columns[keyName]}
-                >
+                <option value={COLUMNS[keyName]} key={COLUMNS[keyName]}>
                   {keyName}
                 </option>
               );
@@ -403,9 +214,9 @@ class DataTable extends React.Component {
         <table className="container">
           <thead>
             <tr>
-              {Object.keys(this.state.columns).map(keyName => {
+              {Object.keys(COLUMNS).map(keyName => {
                 return (
-                  <th scope="col" key={this.state.columns[keyName]}>
+                  <th scope="col" key={COLUMNS[keyName]}>
                     <a
                       onClick={this.handleSortTable(keyName)}
                       className="sort-by"
