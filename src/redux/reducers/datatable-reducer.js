@@ -4,6 +4,7 @@ import {
     DELETE,
     SORT,
     SEARCH,
+    PAGINATION,
 } from '../action-constants';
 
 const INITIAL_STATE = {
@@ -45,39 +46,133 @@ const INITIAL_STATE = {
             emailAddress: "tomhanks@gmail.com"
         }
     ],
+    tableData: [],
+    currentPage: 1,
+    totalPages: 1,
+    searchKey: 'id',
+    searchText: '',
     maxId: 3,
 };
+
+// after each operation set the totalPages
 
 export default function dataTableReducer (state = INITIAL_STATE, action) {
     switch (action.type) {
         // return the state accordingly
         case CREATE: {
-            const resultantState = { ...state };
-            resultantState.maxId++;
-            action.data.id = resultantState.maxId;
-            resultantState.data.push(action.data);
-            return resultantState;
+            state.maxId++;
+            action.data.id = state.maxId;
+            state.data.push(action.data);
+            // return as per page number and search if any
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            let tableData = state.data.slice(startIndex, lastIndex);
+            if (state.searchKey && state.searchText) {
+                tableData = state.data.filter((obj) => {
+                    if (typeof obj[state.searchKey] === 'string') {
+                        return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
+                    } else {
+                        return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
+                    }
+                });
+                tableData = tableData.slice(startIndex, lastIndex);
+            }
+            state.tableData = tableData;
+            state.totalPages = Math.ceil(state.data.length/ 10);
+            return { ...state };
         }
         case UPDATE: {
-            const newData = state.data;
             const index = state.data.findIndex(obj => obj.id === action.data.id);
             action.data.updatedObj.id = action.data.id;
-            newData[index] = action.data.updatedObj;
+            state.data[index] = action.data.updatedObj;
+            // return as per page number and search if any
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            let tableData = state.data.slice(startIndex, lastIndex);
+            if (state.searchKey && state.searchText) {
+                tableData = state.data.filter((obj) => {
+                    if (typeof obj[state.searchKey] === 'string') {
+                        return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
+                    } else {
+                        return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
+                    }
+                });
+                tableData = tableData.slice(startIndex, lastIndex);
+            }
+            state.tableData = tableData;
             return { ...state };
         }
         case DELETE: {
             const index = state.data.findIndex(obj => obj.id === action.data.id);
             state.data.splice(index, 1);
             state.maxId--;
+            // return as per page number and search if any
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            let tableData = state.data.slice(startIndex, lastIndex);
+            if (state.searchKey && state.searchText) {
+                tableData = state.data.filter((obj) => {
+                    if (typeof obj[state.searchKey] === 'string') {
+                        return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
+                    } else {
+                        return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
+                    }
+                });
+                tableData = tableData.slice(startIndex, lastIndex);
+            }
+            state.totalPages = Math.ceil(state.data.length/ 10);
+            state.tableData = tableData;
             return { ...state };
         }
-        case SORT: {
-            return { ...action.data };
-        }
         case SEARCH: {
+            const { key, text } = action.data;
+            state.searchKey = key;
+            state.searchText = text;
+            state.currentPage = 1;
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            // apply filter
+            let tableData = state.data.filter((obj) => {
+                if (typeof obj[key] === 'string') {
+                    return obj[key].trim().toUpperCase().includes(text.trim().toUpperCase());
+                } else {
+                    return obj[key] === parseInt(text.trim(), 10);
+                }
+            });
+            tableData = tableData.slice(startIndex, lastIndex);
+            return { ...state, tableData };
+        }
+        case SORT: {
+            // return as per page number and search if any
+            const tableData = [...action.data];
+            return { ...state, tableData };
+        }
+        case PAGINATION: {
+            // set the
+            state.currentPage = action.data.pageNo;
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            let tableData = state.data.slice(startIndex, lastIndex);
+            if (state.searchKey && state.searchText) {
+                tableData = state.data.filter((obj) => {
+                    if (typeof obj[state.searchKey] === 'string') {
+                        return obj[state.searchKey].trim().toUpperCase().includes(state.searchText.trim().toUpperCase());
+                    } else {
+                        return obj[state.searchKey] === parseInt(state.searchText.trim(), 10);
+                    }
+                });
+                tableData = tableData.slice(startIndex, lastIndex);
+            }
+            state.totalPages = Math.ceil(state.data.length/ 10);
+            state.tableData = tableData;
             return { ...state };
         }
         default:
+            // return the first 10 values from data
+            const lastIndex = state.currentPage * 10;
+            const startIndex = lastIndex - 10;
+            const tableData = state.data.slice(startIndex, lastIndex);
+            state.tableData = tableData;
             return state;
     }
 }

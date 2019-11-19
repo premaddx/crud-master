@@ -3,7 +3,8 @@ import {
     UPDATE,
     DELETE,
     SORT,
-    SEARCH
+    SEARCH,
+    PAGINATION,
 } from '../action-constants';
 
 export function sortAction (data) {
@@ -41,6 +42,24 @@ export function searchAction (data) {
     }
 }
 
+export function paginationAction (data) {
+    return {
+        type: PAGINATION,
+        data
+    }
+}
+
+export function search (key, text) {
+    return async dispatch => {
+        dispatch(searchAction({ key, text }));
+    }
+}
+
+export function pagination (pageNo) {
+    return async dispatch => {
+        dispatch(paginationAction({ pageNo }));
+    }
+}
 
 export function sortTable (data, key, order = 'ASC') {
     return async dispatch => {

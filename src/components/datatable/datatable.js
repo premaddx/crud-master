@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import moment from 'moment';
+import moment from "moment";
 import {
   sortTable,
   createEmployee,
   updateEmployee,
-  deleteEmployee
+  deleteEmployee,
+  search,
+  pagination
 } from "../../redux/actions/datatable-action";
 import Modal from "../Modal";
 import Input from "../Input";
@@ -21,11 +23,12 @@ class DataTable extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchKey: "id",
+      searchText: "",
       isOpen: false,
       modalView: MODAL.VIEW,
       active: null,
-      data: this.props.dataTableReducer.data,
-      headers: {
+      columns: {
         //shift this to constants
         ID: "id",
         "Full Name": "preferredFullName",
@@ -39,6 +42,56 @@ class DataTable extends React.Component {
       }
     };
   }
+
+  handleSortTable = keyName => () => {
+    this.props.sortTable(
+      this.props.tableData,
+      this.state.columns[keyName],
+      "ASC"
+    );
+  };
+
+  createEmployee = () => () => this.props.createEmployee();
+
+  updateEmployee = () => () => this.props.updateEmployee(this.props.maxId);
+
+  deleteEmployee = () => () => this.props.deleteEmployee(this.props.maxId);
+
+  searchTable = () => () => {
+    if (this.state.searchText) {
+      this.props.search(this.state.searchKey, this.state.searchText);
+    }
+  };
+
+  handleTextFieldChange = e => {
+    this.setState({
+      searchText: e.target.value
+    });
+  };
+
+  handleSelectChange = e => {
+    this.setState({
+      searchKey: e.target.value
+    });
+  };
+
+  handlePaginationChange = e => {
+    this.props.pagination(e.target.value);
+  };
+
+  renderPaginationDropdown = () => {
+    const arr = [];
+    for (let i = 1; i <= this.props.totalPages; i++) arr.push(i);
+    return (
+      <select onChange={this.handlePaginationChange}>
+        {arr.map(val => (
+          <option key={val} value={val}>
+            {val}
+          </option>
+        ))}
+      </select>
+    );
+  };
 
   getModalView = () => {
     const { active: a, modalView } = this.state;
@@ -158,7 +211,7 @@ class DataTable extends React.Component {
       }
       case MODAL.CREATE: {
         return (
-            <Fragment>
+          <Fragment>
             <div className="header-section">
               <div className="modal-header">Create Employee</div>
             </div>
@@ -242,7 +295,7 @@ class DataTable extends React.Component {
     if (!this.state.active) return;
     let a = { ...this.state.active };
     a[name] = value;
-    a.preferredFullName = a.firstName + ' ' +a.lastName;
+    a.preferredFullName = a.firstName + " " + a.lastName;
     this.setState({ active: a });
   };
 
@@ -257,18 +310,49 @@ class DataTable extends React.Component {
   render() {
     return (
       <div>
+        <div>
+          <h3>Employees</h3>
+          <button onClick={this.openModal(MODAL.CREATE, {})}>
+            Add Employee
+          </button>
+        </div>
+        <div>
+          <select onChange={this.handleSelectChange}>
+            {Object.keys(this.state.columns).map(keyName => {
+              return (
+                <option
+                  value={this.state.columns[keyName]}
+                  key={this.state.columns[keyName]}
+                >
+                  {keyName}
+                </option>
+              );
+            })}
+          </select>
+          {/**
+           * make curry functions for each event handlers
+           * pick values from document.getElementById for searching
+           */}
+          <input
+            type="text"
+            name="search"
+            placeholder="Search"
+            onChange={this.handleTextFieldChange}
+          ></input>
+          <button type="button" onClick={this.searchTable()}>
+            Click Me!
+          </button>
+        </div>
         <table className="container">
           <thead>
             <tr>
-              {Object.keys(this.state.headers).map(keyName => {
+              {Object.keys(this.state.columns).map(keyName => {
                 return (
-                  <th scope="col" key={this.state.headers[keyName]}>
+                  <th scope="col" key={this.state.columns[keyName]}>
                     <a
                       onClick={() =>
-                        this.props.sortTable(
-                          this.state.data,
-                          this.state.headers[keyName],
-                          "ASC"
+                        this.handleSortTable(
+                          keyName
                         )
                       }
                       className="sort-by"
@@ -281,7 +365,7 @@ class DataTable extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.data.map(obj => {
+            {this.props.tableData.map(obj => {
               return (
                 <tr key={obj.id}>
                   <td>{`EM${obj.id}`}</td>
@@ -315,10 +399,8 @@ class DataTable extends React.Component {
           </tbody>
         </table>
         <div>
-          <button onClick={this.openModal(MODAL.CREATE,{})}>
-            Add Employee
-          </button>
-          <button
+          
+          {/* <button
             onClick={() =>
               this.props.updateEmployee(this.props.dataTableReducer.maxId)
             }
@@ -331,8 +413,9 @@ class DataTable extends React.Component {
             }
           >
             Delete Employee
-          </button>
+          </button> */}
         </div>
+        <div>{this.renderPaginationDropdown()}</div>
         {this.state.isOpen ? (
           <Modal close={this.closeModal}>{this.getModalView()}</Modal>
         ) : (
@@ -344,9 +427,13 @@ class DataTable extends React.Component {
 }
 
 const mapStateToProps = state => {
-  const { dataTableReducer } = state;
+  const {
+    dataTableReducer: { maxId, tableData, totalPages }
+  } = state;
   return {
-    dataTableReducer
+    maxId,
+    tableData,
+    totalPages
   };
 };
 
@@ -354,6 +441,8 @@ export default connect(
   mapStateToProps,
   {
     sortTable,
+    search,
+    pagination,
     createEmployee,
     updateEmployee,
     deleteEmployee

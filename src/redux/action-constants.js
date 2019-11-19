@@ -7,3 +7,5 @@ export const DELETE = 'DELETE';
 export const SORT = 'SORT';
 
 export const SEARCH = 'SEARCH';
+
+export const PAGINATION = 'PAGINATION';
