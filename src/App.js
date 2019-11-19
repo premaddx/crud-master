@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Datatable from './components/datatable/datatable';
-import logo from './logo.svg';
+import HomePage from './components/HomePage';
 import './App.css';
 
 class App extends Component {
@@ -12,7 +11,7 @@ class App extends Component {
         <div className="App-header">
           <h2>Test Proj</h2>
         </div>
-        <Datatable></Datatable>
+        <HomePage></HomePage>
       </div>
     );
   }

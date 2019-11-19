@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import {
   sortTable,
@@ -10,10 +10,11 @@ import {
 } from "../../redux/actions/datatable-action";
 import Modal from "../Modal";
 import Input from "../Input";
+import Table from "../Table";
 import { MODAL, COLUMNS, Create, Update, View } from "./constants";
-import "./datatable.css";
+import "./style.css";
 
-class DataTable extends React.Component {
+class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -46,9 +47,7 @@ class DataTable extends React.Component {
 
   createEmployee = () => this.props.createEmployee();
 
-  updateEmployee = () => this.props.updateEmployee(this.props.maxId);
-
-  deleteEmployee = id => () => this.props.deleteEmployee(id);
+  deleteEmployee = obj => () => this.props.deleteEmployee(obj.id);
 
   searchTable = () => () => {
     if (this.state.searchText) {
@@ -166,23 +165,38 @@ class DataTable extends React.Component {
     this.setState({ active: a });
   };
 
-  openModal = (modalView, active) => () => {
-    this.setState({ isOpen: true, modalView, active });
+  openModal = modalView => active => {
+    this.setState({ isOpen: true, modalView, active: active || {} });
   };
 
   closeModal = () => {
     this.setState({ isOpen: false });
   };
 
+  getActions = () => {
+    return [
+      {
+        label: "View",
+        cb: this.openModal(MODAL.VIEW)
+      },
+      {
+        label: "Edit",
+        cb: this.openModal(MODAL.UPDATE)
+      },
+      {
+        label: "Delete",
+        cb: this.deleteEmployee
+      }
+    ];
+  };
+
   render() {
+    const { tableData } = this.props;
     return (
       <div className="body-container">
         <div className="flex">
           <h3>Employees</h3>
-          <button
-            onClick={this.openModal(MODAL.CREATE, {})}
-            className="primary"
-          >
+          <button onClick={this.openModal(MODAL.CREATE)} className="primary">
             Add Employee
           </button>
         </div>
@@ -196,10 +210,6 @@ class DataTable extends React.Component {
               );
             })}
           </select>
-          {/**
-           * make curry functions for each event handlers
-           * pick values from document.getElementById for searching
-           */}
           <Input
             type="text"
             name="search"
@@ -211,63 +221,13 @@ class DataTable extends React.Component {
             Click Me!
           </button>
         </div>
-        <table className="container">
-          <thead>
-            <tr>
-              {Object.keys(COLUMNS).map(keyName => {
-                return (
-                  <th scope="col" key={COLUMNS[keyName]}>
-                    <a
-                      onClick={this.handleSortTable(keyName)}
-                      className="sort-by"
-                    >
-                      {keyName}
-                    </a>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
-          <tbody>
-            {this.props.tableData.map(obj => {
-              return (
-                <tr key={obj.id}>
-                  <td>{`EM${obj.id}`}</td>
-                  <td>{obj.preferredFullName}</td>
-                  <td>{obj.employeeCode}</td>
-                  <td>{obj.jobTitleName}</td>
-                  <td>{obj.phoneNumber}</td>
-                  <td>{obj.emailAddress}</td>
-                  <td>{obj.region}</td>
-                  <td>{obj.dob}</td>
-                  <td>
-                    <div className="actions">
-                      <button
-                        type="button"
-                        onClick={this.openModal(MODAL.VIEW, obj)}
-                      >
-                        View
-                      </button>
-                      <button
-                        type="button"
-                        onClick={this.openModal(MODAL.UPDATE, obj)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={this.deleteEmployee(obj.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        <div></div>
+        <Table
+          actions={this.getActions()}
+          data={tableData}
+          sortCb={this.handleSortTable}
+          cols={COLUMNS}
+          fixedHeader={true}
+        />
         <div>{this.renderPaginationDropdown()}</div>
         {this.state.isOpen ? (
           <Modal close={this.closeModal}>{this.getModalView()}</Modal>
@@ -302,4 +262,4 @@ export default connect(
     updateEmployee,
     deleteEmployee
   }
-)(DataTable);
+)(HomePage);
