@@ -49,6 +49,7 @@ const INITIAL_STATE = {
     tableData: [],
     currentPage: 1,
     totalPages: 1,
+    pageSize: 10,
     searchKey: 'id',
     searchText: '',
     maxId: 3,
@@ -64,8 +65,8 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             action.data.id = state.maxId;
             state.data.push(action.data);
             // return as per page number and search if any
-            const lastIndex = state.currentPage * 10;
-            const startIndex = lastIndex - 10;
+            const lastIndex = state.currentPage * state.pageSize;
+            const startIndex = lastIndex - state.pageSize;
             let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
                 tableData = state.data.filter((obj) => {
@@ -78,7 +79,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
                 tableData = tableData.slice(startIndex, lastIndex);
             }
             state.tableData = tableData;
-            state.totalPages = Math.ceil(state.data.length/ 10);
+            state.totalPages = Math.ceil(state.data.length/ state.pageSize);
             return { ...state };
         }
         case UPDATE: {
@@ -86,8 +87,8 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             action.data.updatedObj.id = action.data.id;
             state.data[index] = action.data.updatedObj;
             // return as per page number and search if any
-            const lastIndex = state.currentPage * 10;
-            const startIndex = lastIndex - 10;
+            const lastIndex = state.currentPage * state.pageSize;
+            const startIndex = lastIndex - state.pageSize;
             let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
                 tableData = state.data.filter((obj) => {
@@ -107,8 +108,8 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             state.data.splice(index, 1);
             state.maxId--;
             // return as per page number and search if any
-            const lastIndex = state.currentPage * 10;
-            const startIndex = lastIndex - 10;
+            const lastIndex = state.currentPage * state.pageSize;
+            const startIndex = lastIndex - state.pageSize;
             let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
                 tableData = state.data.filter((obj) => {
@@ -120,7 +121,7 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
                 });
                 tableData = tableData.slice(startIndex, lastIndex);
             }
-            state.totalPages = Math.ceil(state.data.length/ 10);
+            state.totalPages = Math.ceil(state.data.length/ state.pageSize);
             state.tableData = tableData;
             return { ...state };
         }
@@ -129,8 +130,8 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
             state.searchKey = key;
             state.searchText = text;
             state.currentPage = 1;
-            const lastIndex = state.currentPage * 10;
-            const startIndex = lastIndex - 10;
+            const lastIndex = state.currentPage * state.pageSize;
+            const startIndex = lastIndex - state.pageSize;
             // apply filter
             let tableData = state.data.filter((obj) => {
                 if (typeof obj[key] === 'string') {
@@ -150,8 +151,8 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
         case PAGINATION: {
             // set the
             state.currentPage = action.data.pageNo;
-            const lastIndex = state.currentPage * 10;
-            const startIndex = lastIndex - 10;
+            const lastIndex = state.currentPage * state.pageSize;
+            const startIndex = lastIndex - state.pageSize;
             let tableData = state.data.slice(startIndex, lastIndex);
             if (state.searchKey && state.searchText) {
                 tableData = state.data.filter((obj) => {
@@ -163,15 +164,16 @@ export default function dataTableReducer (state = INITIAL_STATE, action) {
                 });
                 tableData = tableData.slice(startIndex, lastIndex);
             }
-            state.totalPages = Math.ceil(state.data.length/ 10);
+            state.totalPages = Math.ceil(state.data.length/ state.pageSize);
             state.tableData = tableData;
             return { ...state };
         }
         default:
             // return the first 10 values from data
-            const lastIndex = state.currentPage * 10;
-            const startIndex = lastIndex - 10;
+            const lastIndex = state.currentPage * state.pageSize;
+            const startIndex = lastIndex - state.pageSize;
             const tableData = state.data.slice(startIndex, lastIndex);
+            state.totalPages = Math.ceil(state.data.length/ state.pageSize);
             state.tableData = tableData;
             return state;
     }
