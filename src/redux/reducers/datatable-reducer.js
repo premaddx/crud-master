@@ -33,13 +33,13 @@ const filterRecordsUtil = (
 const INITIAL_STATE = {
     data: [],
     tableData: [],
-    currentPage: 1,
-    totalPages: 1,
-    numberOfButtons: 5,
-    pageSize: 10,
+    currentPage: 1, // index of current page
+    totalPages: 1, // count of total number of pages
+    numberOfButtons: 5, // maximum number of pagination buttons to be shown
+    pageSize: 10, // number of rows in the table at a time
     searchKey: 'id',
     searchText: '',
-    maxId: 3,
+    maxId: 0, // max id in the entire record - used for assiging the id to new user
 };
 
 // after each operation set the totalPages
@@ -152,7 +152,10 @@ export default function dataTableReducer(state = INITIAL_STATE, action) {
     }
     default:
       // return the first 10 values from data
-      if (action.data) state.data = action.data;
+      if (action.data) {
+        state.data = action.data;
+        state.maxId = action.data.length;
+      }
       const lastIndex = state.currentPage * state.pageSize;
       const startIndex = lastIndex - state.pageSize;
       const tableData = state.data.slice(startIndex, lastIndex);
