@@ -50,11 +50,11 @@ class DataTable extends React.Component {
     );
   };
 
-  createEmployee = () => () => this.props.createEmployee();
+  createEmployee = () => this.props.createEmployee();
 
-  updateEmployee = () => () => this.props.updateEmployee(this.props.maxId);
+  updateEmployee = () => this.props.updateEmployee(this.props.maxId);
 
-  deleteEmployee = () => () => this.props.deleteEmployee(this.props.maxId);
+  deleteEmployee = id => () => this.props.deleteEmployee(id);
 
   searchTable = () => () => {
     if (this.state.searchText) {
@@ -62,7 +62,7 @@ class DataTable extends React.Component {
     }
   };
 
-  handleTextFieldChange = (_,value) => {
+  handleTextFieldChange = (_, value) => {
     this.setState({
       searchText: value
     });
@@ -214,7 +214,7 @@ class DataTable extends React.Component {
             <div className="header-section">
               <div className="modal-header">Create Employee</div>
             </div>
-            <form onSubmit={this.updateRecord} className="view-list">
+            <form onSubmit={this.createRecord} className="view-list">
               <div className="flex">
                 <Input
                   label="ID"
@@ -287,7 +287,18 @@ class DataTable extends React.Component {
 
   updateRecord = e => {
     e.preventDefault();
-    //update api
+    console.log(this.state.active);
+    // update api
+    this.props.updateEmployee(this.state.active);
+    this.closeModal();
+  };
+
+  createRecord = e => {
+    e.preventDefault();
+    // create api
+    console.log(this.state.active);
+    this.props.createEmployee(this.state.active);
+    this.closeModal();
   };
 
   onActiveChange = (name, value) => {
@@ -311,7 +322,10 @@ class DataTable extends React.Component {
       <div className="body-container">
         <div className="flex">
           <h3>Employees</h3>
-          <button onClick={this.openModal(MODAL.CREATE, {})} className="primary">
+          <button
+            onClick={this.openModal(MODAL.CREATE, {})}
+            className="primary"
+          >
             Add Employee
           </button>
         </div>
@@ -337,7 +351,7 @@ class DataTable extends React.Component {
             name="search"
             placeholder="Search"
             classProp="search"
-            onChange={this.handleTextFieldChange}            
+            onChange={this.handleTextFieldChange}
           />
           <button type="button" onClick={this.searchTable()}>
             Click Me!
@@ -386,7 +400,12 @@ class DataTable extends React.Component {
                       >
                         Edit
                       </button>
-                      <button type="button">Delete</button>
+                      <button
+                        type="button"
+                        onClick={this.deleteEmployee(obj.id)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
