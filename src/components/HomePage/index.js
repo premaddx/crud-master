@@ -77,7 +77,9 @@ class HomePage extends React.Component {
       this.props.currentPage && parseInt(this.props.currentPage, 10);
     const totalPages =
       this.props.totalPages && parseInt(this.props.totalPages, 10);
-    const limit = currentPage + 5 <= totalPages ? currentPage + 5 : totalPages;
+    const numberOfButtons =
+        this.props.numberOfButtons && parseInt(this.props.numberOfButtons, 10);
+    const limit = currentPage + numberOfButtons <= totalPages ? currentPage + numberOfButtons : totalPages;
     for (let i = currentPage; i <= limit; i++) arr.push(i);
     return (
       <div>
@@ -241,14 +243,14 @@ class HomePage extends React.Component {
 
 const mapStateToProps = state => {
   const {
-    dataTableReducer: { maxId, tableData, totalPages, currentPage, pageSize }
+    dataTableReducer: { tableData, totalPages, currentPage, pageSize, numberOfButtons }
   } = state;
   return {
-    maxId,
     tableData,
     totalPages,
     currentPage,
-    pageSize
+    pageSize,
+    numberOfButtons,
   };
 };
 

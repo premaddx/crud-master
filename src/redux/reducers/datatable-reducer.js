@@ -49,6 +49,7 @@ const INITIAL_STATE = {
     tableData: [],
     currentPage: 1,
     totalPages: 1,
+    numberOfButtons: 5,
     pageSize: 10,
     searchKey: 'id',
     searchText: '',
