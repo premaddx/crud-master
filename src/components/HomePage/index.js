@@ -47,7 +47,7 @@ class HomePage extends React.Component {
 
   createEmployee = () => this.props.createEmployee();
 
-  deleteEmployee = obj => () => this.props.deleteEmployee(obj.id);
+  deleteEmployee = (obj) => this.props.deleteEmployee(obj.id);
 
   searchTable = () => () => {
     if (this.state.searchText) {
@@ -218,7 +218,7 @@ class HomePage extends React.Component {
             onChange={this.handleTextFieldChange}
           />
           <button type="button" onClick={this.searchTable()}>
-            Click Me!
+            Search
           </button>
         </div>
         <Table
