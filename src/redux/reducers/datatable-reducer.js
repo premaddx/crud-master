@@ -8,52 +8,52 @@ import {
 } from "../action-constants";
 
 const INITIAL_STATE = {
-  data: [
-    // move this to constants/mock
-    {
-      id: 1,
-      jobTitleName: "Developer",
-      firstName: "Romin",
-      lastName: "Irani",
-      preferredFullName: "Romin Irani",
-      employeeCode: "E1",
-      region: "CA",
-      dob: "01/10/1993",
-      phoneNumber: "408-1234567",
-      emailAddress: "romin.k.irani@gmail.com"
-    },
-    {
-      id: 2,
-      jobTitleName: "Developer",
-      firstName: "Neil",
-      lastName: "Irani",
-      preferredFullName: "Neil Irani",
-      employeeCode: "E2",
-      region: "CA",
-      dob: "01/10/1992",
-      phoneNumber: "408-1111111",
-      emailAddress: "neilrirani@gmail.com"
-    },
-    {
-      id: 3,
-      jobTitleName: "Program Directory",
-      firstName: "Tom",
-      lastName: "Hanks",
-      dob: "05/12/1995",
-      preferredFullName: "Tom Hanks",
-      employeeCode: "E3",
-      region: "CA",
-      phoneNumber: "408-2222222",
-      emailAddress: "tomhanks@gmail.com"
-    }
-  ],
-  tableData: [],
-  currentPage: 1,
-  totalPages: 1,
-  pageSize: 10,
-  searchKey: "id",
-  searchText: "",
-  maxId: 3
+    data: [ // move this to constants/mock
+        {
+            id: 1,
+            jobTitleName: "Developer",
+            firstName: "Romin",
+            lastName: "Irani",
+            preferredFullName: "Romin Irani",
+            employeeCode: "E1",
+            region: "CA",
+            dob: "01/10/1993",
+            phoneNumber: "408-1234567",
+            emailAddress: "romin.k.irani@gmail.com"
+        },
+        {
+            id: 2,
+            jobTitleName: "Developer",
+            firstName: "Neil",
+            lastName: "Irani",
+            preferredFullName: "Neil Irani",
+            employeeCode: "E2",
+            region: "CA",
+            dob: "01/10/1992",
+            phoneNumber: "408-1111111",
+            emailAddress: "neilrirani@gmail.com"
+        },
+        {
+            id: 3,
+            jobTitleName: "Program Directory",
+            firstName: "Tom",
+            lastName: "Hanks",
+            dob: "05/12/1995",
+            preferredFullName: "Tom Hanks",
+            employeeCode: "E3",
+            region: "CA",
+            phoneNumber: "408-2222222",
+            emailAddress: "tomhanks@gmail.com"
+        }
+    ],
+    tableData: [],
+    currentPage: 1,
+    totalPages: 1,
+    numberOfButtons: 5,
+    pageSize: 10,
+    searchKey: 'id',
+    searchText: '',
+    maxId: 3,
 };
 
 // after each operation set the totalPages
