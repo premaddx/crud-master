@@ -32,10 +32,10 @@ class HomePage extends React.Component {
     let sortType;
     if (keyName === this.state.sortColumn) {
       sortType = this.toggleSortType();
-      this.props.sortTable(this.props.tableData, COLUMNS[keyName], sortType);
+      this.props.sortTable(this.props.tableData, keyName, sortType);
     } else {
       sortType = "ASC";
-      this.props.sortTable(this.props.tableData, COLUMNS[keyName], sortType);
+      this.props.sortTable(this.props.tableData, keyName, sortType);
     }
     this.setState({ sortType, sortColumn: keyName });
   };
@@ -204,10 +204,10 @@ class HomePage extends React.Component {
         </div>
         <div>
           <select onChange={this.handleSelectChange}>
-            {Object.keys(COLUMNS).map(keyName => {
+            {Object.keys(COLUMNS).map(col => {
               return (
-                <option value={COLUMNS[keyName]} key={COLUMNS[keyName]}>
-                  {keyName}
+                <option value={col} key={col}>
+                  {COLUMNS[col]['label']}
                 </option>
               );
             })}

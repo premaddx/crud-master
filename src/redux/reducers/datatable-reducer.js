@@ -193,4 +193,5 @@ const filterRecordsUtil = (
     }
   });
   tableData = tableData.slice(startIndex, lastIndex);
+  return tableData;
 };

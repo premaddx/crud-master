@@ -1,17 +1,44 @@
 import React, { Fragment } from "react";
 import Input from "../Input";
 
-
 export const COLUMNS = {
-  ID: "id",
-  "Full Name": "preferredFullName",
-  "Employee Code": "employeeCode",
-  "Job Title": "jobTitleName",
-  "Phone Number": "phoneNumber",
-  "Email ID": "emailAddress",
-  Region: "region",
-  DOB: "dob",
-  Action: null
+  id:{
+    label: "ID",
+    sortable: true
+  },
+  preferredFullName:{
+    label: "Full Name",
+    sortable: true
+  },
+  employeeCode:{
+    label: "Employee Code",
+    sortable: true
+  },
+  jobTitleName:{
+    label: "Job Title",
+    sortable: true
+  },
+  phoneNumber:{
+    label: "Phone Number",
+    sortable: true
+  },
+  emailAddress:{
+    label: "Email ID",
+    sortable: true
+  },
+  region:{
+    label: "Region",
+    sortable: true
+  },
+  dob:{
+    label: "DOB",
+    sortable: true
+  },
+  actions:{
+    label: "",
+    sortable: false,
+    isAction: true
+  }
 };
 
 export const MODAL = {
