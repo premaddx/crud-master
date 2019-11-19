@@ -1,7 +1,24 @@
 .App {
-  text-align: center;
 }
-
+select {
+  height: 30px;
+  background: #fff;
+  border: 1px solid #ddd;
+  min-width: 150px;
+}
+button.primary {
+  background: #16a1cf;
+  color: white;
+}
+button {
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  height: 35px;
+  padding: 0 20px;
+  margin-right: 5px;
+}
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
@@ -9,7 +26,8 @@
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 100px;
+  text-align: left;
   padding: 20px;
   color: white;
 }
@@ -19,6 +37,10 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

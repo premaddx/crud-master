@@ -1,11 +1,11 @@
 import React from "react";
 import './style.css';
-const Input = ({ label, disabled, value, onChange, name, type, ...rest,pre='' }) => {
+const Input = ({ label, disabled, value, onChange, name, type,pre="",classProp, ...rest }) => {
   const onInputChange = e => {
     onChange(name, e.target.value);
   };
   return (
-    <div className="form-input">
+    <div className={`${classProp} form-input`}>
       <label>{label}</label>
       <div className="input-wrap">
         {pre}

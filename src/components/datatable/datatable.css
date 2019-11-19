@@ -16,9 +16,11 @@ a:active {
 	text-decoration: none;
 }
 .container {
-  margin: 50px auto;
-  padding: 0 50px;
-  max-width: 960px;
+  margin: 40px 0;
+}
+
+.body-container{
+	padding: 50px;
 }
 table {
 	background: #FFF;
@@ -27,7 +29,7 @@ table {
 }
 td,
 th {
-	padding: 4px;
+	padding: 15px 5px;
 	border: 1px solid #CCC;
 	overflow: hidden;
 	text-align: left;
@@ -73,10 +75,17 @@ a.sort-by:after {
 
 .actions{
 	display: flex;
+	justify-content: center;
 }
 
 .actions > div {
 	margin: 0 5px;
+}
+
+.search{
+	width: 200px;
+	display: inline-block;
+	margin: 0;
 }
 
 .view-list{
