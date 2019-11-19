@@ -80,7 +80,8 @@ class DataTable extends React.Component {
 
     renderPaginationDropdown = () => {
         const arr = [];
-        const { currentPage, totalPages } = this.props;
+        const currentPage = this.props.currentPage && parseInt(this.props.currentPage, 10);
+        const totalPages = this.props.totalPages && parseInt(this.props.totalPages, 10);
         const limit = ((currentPage + 5) <= totalPages) ? currentPage + 5 : totalPages;
         for (let i = currentPage; i <= limit; i++) arr.push(i);
         return (
