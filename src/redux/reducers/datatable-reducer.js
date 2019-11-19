@@ -7,7 +7,7 @@ import {
 } from '../action-constants';
 
 const INITIAL_STATE = {
-    data: [
+    data: [ // move this to constants/mock
         {
             id: 1,
             jobTitleName: "Developer",

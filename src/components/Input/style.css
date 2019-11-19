@@ -1,0 +1,33 @@
+.form-input{
+    margin: 10px 0;
+}
+
+.form-input > .input-wrap >input{
+    height: 30px;
+    margin-top: 5px;
+    border: 1px solid #dedede;
+    padding: 0px 10px;
+    width: 100%;
+}
+
+label{
+    color: #afafaf;
+    font-size: 14px;
+}
+
+.input-wrap{
+    margin: 5px 20px 0 0;
+}
+
+.form-input > .input-wrap >input.with-pre{
+    width: unset;
+}
+
+.input-pre{
+    background-color: #ddd;
+    display: inline-block;
+    padding: 7px;
+    font-size: 14px;
+    position: relative;
+    top: 1px;
+}

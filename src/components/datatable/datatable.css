@@ -69,3 +69,54 @@ a.sort-by:after {
 	border-top-color: #666;
 	margin-top: 1px;
 }
+
+
+.actions{
+	display: flex;
+}
+
+.actions > div {
+	margin: 0 5px;
+}
+
+.view-list{
+	list-style-type: none;
+	padding: 0;
+	border-top: 1px solid #ededed;
+	padding: 30px;
+}
+
+.view-list >li{
+	display: flex;
+	justify-content: space-between;
+	margin: 15px 0;
+}
+
+.view-list > li >div{
+	flex-grow: 1;
+	flex-basis: 0;
+}
+
+.header-section{
+	padding: 15px 30px;
+}
+
+.modal-header{
+	font-size: 23px;
+	font-weight: bold;
+	margin-top: 5px;
+}
+
+.label{
+	color: #afafaf;
+}
+
+.flex{
+	display: flex;
+	justify-content: space-between;
+}
+
+.flex > div{
+	flex: 1;
+	flex-basis: 0;
+}
