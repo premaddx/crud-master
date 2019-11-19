@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import {
   sortTable,
+  fetchTableData,
   createEmployee,
   updateEmployee,
   deleteEmployee,
@@ -26,6 +27,10 @@ class HomePage extends React.Component {
       sortType: "ASC",
       sortColumn: "id"
     };
+  }
+
+  componentDidMount() {
+    this.props.fetchTableData();
   }
 
   handleSortTable = keyName => () => {
@@ -260,6 +265,7 @@ export default connect(
     sortTable,
     search,
     pagination,
+    fetchTableData,
     createEmployee,
     updateEmployee,
     deleteEmployee

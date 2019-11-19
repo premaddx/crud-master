@@ -19,11 +19,26 @@ With this datable as an end user you should be able to:
     $ yarn start
 ```
 
-### Configurability  -
+### Features  -
 
 ```
-    1. Page Size.
-    2. Number of next page buttons for pagination.
-    3. Whether the header should be fixed.
+    1. View data in tabular format -
+        The page size, page number, number of pagination buttons, search is handled by the reducer.
+        All the initial configurations of the same is provided in the initial state of the reducer.
+        Inititally state of the reducer is initialized with 3 default entries provided by the mock api.
+
+    2. Sortability -
+        The sortability of the column is configured in the Homepage/constants.js. I have exported a
+        COLUMNS variable which has configuration of column like - display name of column, sortability
+        of a column etc. This COLUMNS variable is supplied to the table component via props.
+
+    3. Searching -
+        The search functionality in the table is also controlled via reducer.
+
+    4. Fixed header -
+        Behaviour for the fixed header is controlled by the fixedHeader prop supplied to the table component.
+
+    5. Pagination -
+        The pagination functionality in the table is also controlled via reducer.
 
 ```

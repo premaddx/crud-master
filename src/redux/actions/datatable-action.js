@@ -5,64 +5,80 @@ import {
     SORT,
     SEARCH,
     PAGINATION,
+    DEFAULT,
 } from '../action-constants';
 
-export function sortAction (data) {
+function defaultAction(data) {
+    return {
+        type: DEFAULT,
+        data
+    }
+}
+
+function sortAction (data) {
     return {
         type: SORT,
         data
     }
 }
 
-export function createAction (data) {
+function createAction (data) {
     return {
         type: CREATE,
         data
     }
 }
 
-export function updateAction (data) {
+function updateAction (data) {
     return {
         type: UPDATE,
         data
     }
 }
 
-export function deleteAction (data) {
+function deleteAction (data) {
     return {
         type: DELETE,
         data
     }
 }
 
-export function searchAction (data) {
+function searchAction (data) {
     return {
         type: SEARCH,
         data
     }
 }
 
-export function paginationAction (data) {
+function paginationAction (data) {
     return {
         type: PAGINATION,
         data
     }
 }
 
-export function search (key, text) {
+export function fetchTableData () {
     return async dispatch => {
+        fetch('https://my-json-server.typicode.com/darshanp40/employeedb/employees')
+        .then(results => results.json())
+        .then(data => dispatch(defaultAction(data[0])));
+    }
+}
+
+export function search (key, text) {
+    return dispatch => {
         dispatch(searchAction({ key, text }));
     }
 }
 
 export function pagination (pageNo) {
-    return async dispatch => {
+    return dispatch => {
         dispatch(paginationAction({ pageNo }));
     }
 }
 
 export function sortTable (data, key, order = 'ASC') {
-    return async dispatch => {
+    return dispatch => {
         // sort the data as per key and dispatch action
         const sortedArray = data.sort((a, b) => {
             const val = typeof a[key] === 'string' ? a[key].localeCompare(b[key]) : a[key] - b[key];
@@ -75,7 +91,7 @@ export function sortTable (data, key, order = 'ASC') {
 
 
 export function createEmployee (data = {}) {
-    return async dispatch => {
+    return dispatch => {
         dispatch(createAction(data));
     }
 }
@@ -83,7 +99,7 @@ export function createEmployee (data = {}) {
 
 
 export function updateEmployee (data = {}) {
-    return async dispatch => {
+    return dispatch => {
         dispatch(updateAction({ updatedObj: data, id: data.id }));
     }
 }
@@ -91,7 +107,7 @@ export function updateEmployee (data = {}) {
 
 
 export function deleteEmployee (id) {
-    return async dispatch => {
+    return dispatch => {
         dispatch(deleteAction({ id }));
     }
 }

@@ -9,7 +9,7 @@ class App extends Component {
       <div className="App">
         <div id="modal-root"></div>
         <div className="App-header">
-          <h2>Test Proj</h2>
+          <h2>CRUD Master</h2>
         </div>
         <HomePage></HomePage>
       </div>
