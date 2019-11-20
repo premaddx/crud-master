@@ -55,9 +55,7 @@ class HomePage extends React.Component {
   deleteEmployee = (obj) => this.props.deleteEmployee(obj.id);
 
   searchTable = () => () => {
-    if (this.state.searchText) {
       this.props.search(this.state.searchKey, this.state.searchText);
-    }
   };
 
   handleTextFieldChange = (_, value) => {
